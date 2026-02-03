@@ -1,7 +1,10 @@
 # Deal Diligence OS
 
 > A Telegram-driven personal operating system for research, finance tracking, journaling, and habit RPG—built on Raspberry Pi, Notion, and Perplexity AI.
+> **Featured Project** - As seen on LinkedIn | 
 
+[![GitHub stars](https://img.shields.io/github/stars/brianj0108-netizen/deal-diligence-os-public?style=social)](https://github.com/brianj0108-netizen/deal-diligence-os-public)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue)](https://linkedin.com/in/brian-john-51215132b/)
 ---
 
 ## Overview
