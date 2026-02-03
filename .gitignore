@@ -1,0 +1,10 @@
+# Do not commit real keys
+keys.local.txt
+
+# Python noise
+__pycache__/
+*.pyc
+
+# Env files
+.env
+.env.*
