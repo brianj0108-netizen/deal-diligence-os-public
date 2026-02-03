@@ -112,7 +112,7 @@ Installation
 Clone this repo
 
 bash
-git clone https://github.com/YOUR_USERNAME/deal-diligence-os-public.git
+git clone https://github.com/brianj0108-netizen/deal-diligence-os-public.git
 cd deal-diligence-os-public
 Copy the example keys file and fill in your credentials
 
@@ -255,8 +255,6 @@ Roadmap / Future Ideas
 Contributing
 This is a personal project/portfolio piece, but if you fork it and build something cool, feel free to open a PR or just share what you made. I'd love to see it.
 
-License
-MIT License - feel free to use, modify, and distribute. See LICENSE for details.
 
 Contact
 Questions? Ideas? Want to hire me to build something similar for you?
@@ -272,6 +270,7 @@ Perplexity AI for the research + stock analysis engine
 Notion for the flexible database + API
 
 Built with ☕ and late-night coding sessions on a Raspberry Pi Zero W.
+
 Telegram for the clean bot API
 
 The open-source Python community (requests, OpenAI client, etc.)
