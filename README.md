@@ -6,6 +6,18 @@
 [![GitHub stars](https://img.shields.io/github/stars/brianj0108-netizen/deal-diligence-os-public?style=social)](https://github.com/brianj0108-netizen/deal-diligence-os-public)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue)](https://linkedin.com/in/brian-john-51215132b/)
 ---
+## ⚖️ Legal Disclaimer
+
+**This is an educational project demonstrating API integration and automation. NOT financial advice.**
+
+- Stock analysis features are for **informational purposes only**
+- Do NOT make investment decisions based on this tool
+- Consult a licensed financial advisor before investing
+- The creator is not liable for any financial losses
+- By using this code, you agree to use it at your own risk
+
+This tool does not constitute investment advice, and the creator is not a registered investment advisor.
+
 
 ## Overview
 
