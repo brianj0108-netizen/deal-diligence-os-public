@@ -1,98 +1,114 @@
-"""
-titan_trainer.py
-
-Simple Telegram workout scheduler.
-
-- Reads Telegram credentials from config_public.py
-- Looks up today's workout in WORKOUT_PLANS
-- Sends it to your Telegram chat
-
-You can customize the workouts by editing the WORKOUT_PLANS
-dictionary below. No Python knowledge required if you only
-change the text inside the triple quotes.
-"""
-
-from datetime import datetime
 import requests
-from config_public import TELEGRAM_TOKEN, TELEGRAM_CHAT_ID
+from datetime import datetime
 
-# ================================
-# EDIT THIS SECTION ONLY
-# Customize your workout plan here
-# ================================
+# ==========================================
+# 1. SETUP & AUTH (The Professional Way)
+# ==========================================
+keys = {}
+try:
+    with open("/home/brian/.secrets/keys.txt") as f:
+        for line in f:
+            if '=' in line:
+                k, v = line.strip().split('=')
+                keys[k.strip()] = v.strip()
+except Exception as e:
+    print(f"❌ Error loading keys file: {e}")
+    exit()
 
-# Keys: lowercase weekday names ("monday", "tuesday", ...)
-# Values: the message that will be sent to you on that day.
-WORKOUT_PLANS = {
-    "monday": """Upper Body A:
-- Bench Press 3x8
-- Barbell Row 3x10
-- Shoulder Press 3x10
-- Planks 3x30s""",
+token = keys.get("TELEGRAM_TOKEN")
+CHAT_ID = keys.get("CHAT_ID")
 
-    "wednesday": """Lower Body:
-- Squats 3x8
-- Romanian Deadlift 3x10
-- Lunges 3x10/leg
-- Hanging Leg Raises 3x10""",
+if not token or not CHAT_ID:
+    print("❌ Error: Missing TELEGRAM_TOKEN or CHAT_ID in keys.txt")
+    exit()
 
-    "friday": """Upper Body B:
-- Incline DB Press 3x8
-- Pull-ups 3xAMRAP
-- Dips 3xAMRAP
-- Side Planks 3x30s/side""",
+# ==========================================
+# 2. THE COMEBACK PROTOCOL
+# ==========================================
+# 0=Monday, 1=Tuesday, ... 6=Sunday
+schedule = {
+    0: (
+        "⚔️ **MONDAY: CHEST & TRICEPS (The Entry)**\n"
+        "------------------------------------\n"
+        "• Flat Bench Press: 4 sets x 8 reps\n"
+        "• Incline Dumbbell Press: 3 sets x 10 reps\n"
+        "• Cable Flys: 3 sets x 15 reps\n"
+        "• Tricep Rope Pushdowns: 4 sets x 12 reps\n"
+        "• Overhead Extensions: 3 sets x 12 reps"
+    ),
+    1: (
+        "🦍 **TUESDAY: BACK & BICEPS (The Pull)**\n"
+        "------------------------------------\n"
+        "• Deadlifts (or Rack Pulls): 3 sets x 5 reps\n"
+        "• Lat Pulldowns (Wide Grip): 4 sets x 10 reps\n"
+        "• Seated Cable Rows: 3 sets x 12 reps\n"
+        "• Barbell Curls: 3 sets x 10 reps\n"
+        "• Hammer Curls: 3 sets x 12 reps"
+    ),
+    2: (
+        "🫁 **WEDNESDAY: ACTIVE RECOVERY**\n"
+        "------------------------------------\n"
+        "• 30 Minute Zone 2 Cardio (Jog/Incline Walk)\n"
+        "• 15 Minute Deep Stretch / Mobility\n"
+        "• Core: Planks (3 sets x 60s)"
+    ),
+    3: (
+        "🦵 **THURSDAY: LEGS (The Foundation)**\n"
+        "------------------------------------\n"
+        "• Squats: 4 sets x 6-8 reps\n"
+        "• Leg Press: 3 sets x 12 reps\n"
+        "• Romanian Deadlifts: 3 sets x 10 reps\n"
+        "• Calf Raises: 4 sets x 15 reps"
+    ),
+    4: (
+        "🛡️ **FRIDAY: UPPER BODY PUMP (The Armor)**\n"
+        "------------------------------------\n"
+        "• Overhead Press (Standing): 4 sets x 8 reps\n"
+        "• Lateral Raises (Dumbbell): 4 sets x 15 reps\n"
+        "• Face Pulls: 4 sets x 15 reps\n"
+        "• Chin-ups: 3 sets x AMRAP (As Many As Possible)\n"
+        "• Bicep/Tricep Superset: 3 sets x 12 reps"
+    ),
+    5: (
+        "🏔️ **SATURDAY: THE WILD CARD**\n"
+        "------------------------------------\n"
+        "• 1 Hour Activity: Hike, Sport, or Long Ruck.\n"
+        "• Get out of the house. No screens."
+    ),
+    6: (
+        "🥩 **SUNDAY: STRATEGY & PREP**\n"
+        "------------------------------------\n"
+        "• Meal Prep for the week.\n"
+        "• Review Chase calendar.\n"
+        "• Sleep 8+ hours."
+    )
 }
 
-# If you want workouts on other days, add entries like:
-# "tuesday": "Your cardio / conditioning plan here",
-
-
-# ================================
-# BELOW THIS LINE: LOGIC
-# You normally do NOT need to edit
-# ================================
-
-def send_telegram_message(text: str) -> None:
-    """Send a plain-text message to your Telegram chat."""
-    if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
-        print("❌ Missing TELEGRAM_TOKEN or TELEGRAM_CHAT_ID in keys.local.txt")
-        return
-
-    url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
-    payload = {
-        "chat_id": TELEGRAM_CHAT_ID,
-        "text": text,
-        "parse_mode": "Markdown",
+# ==========================================
+# 3. THE TRANSMISSION
+# ==========================================
+def send_workout():
+    day_index = datetime.now().weekday()
+    workout = schedule.get(day_index, "Rest Day")
+    
+    # The Header that sets the tone
+    message = f"🔥 **THE COMEBACK** 🔥\n\n{workout}\n\n*Log this in your RPG when done.*"
+    
+    url = f"https://api.telegram.org/bot{token}/sendMessage"
+    data = {
+        "chat_id": CHAT_ID, 
+        "text": message, 
+        "parse_mode": "Markdown"
     }
-
+    
     try:
-        resp = requests.post(url, json=payload, timeout=10)
-        if resp.status_code != 200:
-            print(f"❌ Telegram error: {resp.status_code} {resp.text}")
+        response = requests.post(url, data=data)
+        if response.status_code == 200:
+            print("✅ Mission transmitted.")
         else:
-            print("✅ Workout message sent to Telegram")
+            print(f"❌ Transmission failed: {response.text}")
     except Exception as e:
-        print(f"⚠️ Telegram send error: {e}")
-
-
-def get_today_key() -> str:
-    """Return today's weekday name in lowercase (e.g. 'monday')."""
-    return datetime.now().strftime("%A").lower()
-
-
-def main():
-    today = get_today_key()
-    print(f"📅 Today is: {today}")
-
-    workout = WORKOUT_PLANS.get(today)
-
-    if not workout:
-        print("ℹ️ No workout scheduled for today in WORKOUT_PLANS.")
-        return
-
-    message = f"💪 *Today's Workout* ({today.title()}):\n\n{workout}"
-    send_telegram_message(message)
-
+        print(f"❌ Connection Error: {e}")
 
 if __name__ == "__main__":
-    main()
+    send_workout()

@@ -436,7 +436,19 @@ def generate_content(data, newsletter_type):
         clean_html = re.sub(r'```html|```', '', content).strip()
         clean_html = re.sub(r'\[\d+\]', '', clean_html)
 
-        disclaimer = """<br><hr><div style="font-size: 10px; color: #666;"><p><b>DISCLAIMER & DISCLOSURE:</b> For Informational Purposes Only. This communication is strictly for educational and entertainment purposes. It is not intended as an offer or solicitation for the purchase or sale of any financial instrument, nor is it intended to provide investment, legal, or tax advice. Opinions Are My Own. Risk Warning: Trading involves substantial risks.</p></div>"""
+        disclaimer = """<br><hr>
+<div style="background-color: #fff3cd; padding: 15px; border: 1px solid #ffc107; margin: 20px 0;">
+  <p style="margin: 0; font-size: 11px; color: #856404;">
+    <b>⚠️ INVESTMENT DISCLAIMER:</b> This newsletter is for informational and educational purposes only. 
+    It is NOT investment advice. Consult a licensed financial advisor before making investment decisions. 
+    Past performance does not guarantee future results.
+  </p>
+</div>
+<div style="font-size: 10px; color: #666;">
+  <p><b>DISCLAIMER & DISCLOSURE:</b> For Informational Purposes Only. This communication is strictly for educational and entertainment purposes. It is not intended as an offer or solicitation for the purchase or sale of any financial instrument, nor is it intended to provide investment, legal, or tax advice. Opinions Are My Own. <b>Risk Warning:</b> Trading involves substantial risks.</p>
+</div>
+"""
+
 
         log_event("✅ Content generated successfully")
         return clean_html + disclaimer
@@ -534,3 +546,4 @@ if __name__ == "__main__":
             pass
 
         sys.exit(1)
+# test sync
